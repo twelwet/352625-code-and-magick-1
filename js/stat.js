@@ -18,10 +18,10 @@ window.renderStatistics = function (ctx, names, times) {
   ctx.fillText('Список результатов:', 120, 60);
 
   // Объявим функцию поиска худшего времени в массиве times[]
-  var searchWorseTime = function () {
+  var searchWorseTime = function (array) {
     var max = -1;
-    for (var i = 0; i < times.length; i++) {
-      var time = times[i];
+    for (var i = 0; i < array.length; i++) {
+      var time = array[i];
       if (time > max) {
         max = time;
       }
@@ -42,20 +42,19 @@ window.renderStatistics = function (ctx, names, times) {
   var barDistanceX = 0; // Шаг смещения между столбцами
 
   // Вычислим шаг нормирования высоты столбца
-  var step = BAR_HEIGHT / searchWorseTime();
+  var step = BAR_HEIGHT / searchWorseTime(times);
 
   // Объявим функцию получения случайного цвета столбца гистограммы
-  var getRandomColor = function (index) {
-    var randomTransparency = Math.random().toFixed(1);
-    ctx.fillStyle = 'rgba(0, 0, 255,' + randomTransparency + ')';
-    if (names[index] === 'Вы') {
-      ctx.fillStyle = 'rgb(255, 0, 0)';
-    }
-    return ctx.fillStyle;
+  var getRandomNumber = function () {
+    return Math.random().toFixed(1);
   };
 
   // Объявим функцию отрисовки столбца гистограммы
   var drawBar = function (stepX, index) {
+    ctx.fillStyle = 'rgba(0, 0, 255,' + getRandomNumber() + ')';
+    if (names[index] === 'Вы') {
+      ctx.fillStyle = 'rgb(255, 0, 0)';
+    }
     return ctx.fillRect(INITIAL_X + stepX, INITIAL_Y, -BAR_WIDTH, -times[index] * step);
   };
 
@@ -68,9 +67,8 @@ window.renderStatistics = function (ctx, names, times) {
 
   // Запускаем в цикле три ранее объявленные функции
   for (var i = 0; i < times.length; i++) {
-    getRandomColor(i);
+    barDistanceX = i * (BAR_WIDTH + INDENT); // Увеличиваем шаг смещения между результатами
     drawBar(barDistanceX, i);
     writeText(barDistanceX, i);
-    barDistanceX = barDistanceX + BAR_WIDTH + INDENT; // Увеличиваем шаг смещения между результатами
   }
 };
