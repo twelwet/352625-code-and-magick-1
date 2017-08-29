@@ -59,12 +59,12 @@
       draggedItem = evt.target;
       evt.dataTransfer.setData('text/plain', evt.target.alt);
     }
+    artifactsElement.style.outline = '2px dashed red';
   });
 
   var artifactsElement = document.querySelector('.setup-artifacts');
 
   artifactsElement.addEventListener('dragover', function (evt) {
-    // artifactsElement.style.outline = '2px dashed red';
     evt.preventDefault();
     return false;
   });

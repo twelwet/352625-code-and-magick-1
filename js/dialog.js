@@ -103,8 +103,6 @@
     evt.preventDefault();
   });
 
-  // Обработчик повесил на '.upload', функционал работает,
-  // но по ТЗ надо повесить на '.setup-user-pic'. Не разобрался.
   dialogHandle.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
 
