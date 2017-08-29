@@ -28,6 +28,8 @@
   var closePopup = function () {
     window.setup.classList.add('hidden');
     document.removeEventListener('keydown', onPopupEscPress);
+    window.setup.style.top = '100px';
+    window.setup.style.left = '50%';
   };
 
   // Опишем реакцию блока '.setup-open' на клик мыши
@@ -90,5 +92,50 @@
   // 3)
   wizardFireball.addEventListener('click', function () {
     wizardFireball.style.background = window.util.getRandomValue(window.util.WIZARD_FIREBALL_COLOR);
+  });
+
+  // Реализуем функционал перетаскивания окна '.setup'
+  // Найдем элемент, за который будем 'тянуть' окно
+  var dialogHandle = window.setup.querySelector('.upload');
+
+  // Отменяем действие по умолчанию на клик по '.upload'
+  dialogHandle.addEventListener('click', function (evt) {
+    evt.preventDefault();
+  });
+
+  dialogHandle.addEventListener('mousedown', function (evt) {
+    evt.preventDefault();
+
+    var startCoords = {
+      x: evt.clientX,
+      y: evt.clientY
+    };
+
+    var onMouseMove = function (moveEvt) {
+      moveEvt.preventDefault();
+
+      var shift = {
+        x: startCoords.x - moveEvt.clientX,
+        y: startCoords.y - moveEvt.clientY
+      };
+
+      startCoords = {
+        x: moveEvt.clientX,
+        y: moveEvt.clientY
+      };
+
+      window.setup.style.top = (window.setup.offsetTop - shift.y) + 'px';
+      window.setup.style.left = (window.setup.offsetLeft - shift.x) + 'px';
+    };
+
+    var onMouseUp = function (upEvt) {
+      upEvt.preventDefault();
+
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    };
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
   });
 })();
