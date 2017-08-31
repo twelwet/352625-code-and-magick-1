@@ -79,20 +79,20 @@
   var wizardEyes = wizard.querySelector('.wizard-eyes');
   var wizardFireball = document.querySelector('.setup-fireball-wrap');
 
+  var fillElement = function (element, color) {
+    element.style.fill = color;
+  };
+
+  var changeElementBackground = function (element, color) {
+    element.style.backgroundColor = color;
+  };
+
   // 1)
-  wizardCoat.addEventListener('click', function () {
-    wizardCoat.style.fill = window.util.getRandomValue(window.util.WIZARD_COAT_COLOR);
-  });
-
+  window.colorize(wizardCoat, window.util.WIZARD_COAT_COLOR, fillElement);
   // 2)
-  wizardEyes.addEventListener('click', function () {
-    wizardEyes.style.fill = window.util.getRandomValue(window.util.WIZARD_EYES_COLOR);
-  });
-
+  window.colorize(wizardEyes, window.util.WIZARD_EYES_COLOR, fillElement);
   // 3)
-  wizardFireball.addEventListener('click', function () {
-    wizardFireball.style.background = window.util.getRandomValue(window.util.WIZARD_FIREBALL_COLOR);
-  });
+  window.colorize(wizardFireball, window.util.WIZARD_FIREBALL_COLOR, changeElementBackground);
 
   // Реализуем функционал перетаскивания окна '.setup'
   // Найдем элемент, за который будем 'тянуть' окно
