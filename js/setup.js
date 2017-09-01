@@ -11,42 +11,45 @@
   // Находим TEMPLATE похожего персонажа
   var similarWizardTemplate = document.getElementById('similar-wizard-template').content;
 
-  // Объявляем переменную-массив похожих персонажей
-  var wizards = new Array(window.util.WIZARD_QUANTITY);
-
-  // Заполняем в цикле переменную-массив похожих персонажей
-  // рандомными данными из соответствующих констант
-  for (var i = 0; i < wizards.length; i++) {
-    wizards[i] = {
-      name: window.util.getRandomValue(window.util.WIZARD_NAMES),
-      surname: window.util.getRandomValue(window.util.WIZARD_SURNAMES),
-      coatColor: window.util.getRandomValue(window.util.WIZARD_COAT_COLOR),
-      eyesColor: window.util.getRandomValue(window.util.WIZARD_EYES_COLOR)
-    };
-  }
-
-  // Объявляем функцию создания DOM-элемента похожего персонажа
+  // Объявим функцию создания DOM-элемента похожего персонажа
   var renderWizard = function (wizard) {
     // Объявляем переменную, в которую клонируем шаблон похожего героя
     var wizardElement = similarWizardTemplate.cloneNode(true);
     // Задаем имя персонажа, цвет мантии, цвет глаз
-    wizardElement.querySelector('.setup-similar-label').textContent = wizard.name + ' ' + wizard.surname;
-    wizardElement.querySelector('.wizard-coat').style.fill = wizard.coatColor;
-    wizardElement.querySelector('.wizard-eyes').style.fill = wizard.eyesColor;
+    wizardElement.querySelector('.setup-similar-label').textContent = wizard.name;
+    wizardElement.querySelector('.wizard-coat').style.fill = wizard.colorCoat;
+    wizardElement.querySelector('.wizard-eyes').style.fill = wizard.colorEyes;
     return wizardElement;
   };
 
-  // Объявляем функцию заполнения блока DOM-элементами
-  var drawAllWizards = function () {
+  // Объявим callback-функцию которая заполнит DIV '.setup-similar'
+  // DOM-элементами при успешной загрузке данных
+  var onLoad = function (array) {
     var fragment = document.createDocumentFragment();
-    for (i = 0; i < wizards.length; i++) {
-      fragment.appendChild(renderWizard(wizards[i]));
+    for (var i = 0; i < window.util.WIZARD_QUANTITY; i++) {
+      fragment.appendChild(renderWizard(array[i]));
     }
     similarListElement.appendChild(fragment);
     userDialog.querySelector('.setup-similar').classList.remove('hidden');
   };
 
-  drawAllWizards();
+  // Объявим callback-функцию, которая сообщит об ошибке
+  // при неуспешной попытке загрузить данные с сервера
+  var onError = function (message) {
+    var node = document.createElement('div');
+    node.style.backgroundColor = 'red';
+    node.style.margin = 'auto';
+    node.style.textAlign = 'center';
+    node.style.position = 'relative';
+    node.style.fontSize = '18px';
+    node.style.color = 'white';
+    node.textContent = message;
+    document.body.insertAdjacentElement('afterbegin', node);
+  };
+
+  // Вызовем саму функцию загрузки данных
+  window.backend.load(onLoad, onError);
+
   window.setup = userDialog;
 
   // Реализуем функционал перетаскивания артефактов в окне '.setup'

@@ -63,6 +63,32 @@
     }
   });
 
+  // Объявим callback-функцию, которая отправляет данные формы
+  // на сервер и закрывает окно диалога
+  var onLoad = function () {
+    window.setup.classList.add('hidden');
+  };
+
+  // Объявим callback-функцию, которая сообщит об ошибке
+  // при неуспешной отправке данных на сервер
+  var onError = function (message) {
+    var node = document.createElement('div');
+    node.style.backgroundColor = 'red';
+    node.style.margin = 'auto';
+    node.style.textAlign = 'center';
+    node.style.position = 'relative';
+    node.style.fontSize = '18px';
+    node.style.color = 'white';
+    node.textContent = message;
+    document.body.insertAdjacentElement('afterbegin', node);
+  };
+
+  var form = window.setup.querySelector('.setup-wizard-form');
+  form.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+    window.backend.save(new FormData(form), onLoad, onError);
+  });
+
   // Проведем валидацию ввода имени персонажа
   setupUserName.required = true;
   setupUserName.minLength = 2;
